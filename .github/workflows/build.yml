@@ -1,0 +1,42 @@
+name: Build Hippo!
+
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
+
+jobs:
+  # Build the whole project (Rust WASM + React) using make
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Install Rust stable toolchain with WASM target
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: wasm32-unknown-unknown
+          override: true
+
+      - name: Install wasm-pack
+        run: cargo install wasm-pack
+
+      - name: Install React app dependencies
+        run: make install-react
+
+      - name: Build Rust WASM module & React production build
+        run: make build
+
+      - name: Publish to Netlify
+        uses: netlify/actions/build@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          #NETLIFY_BASE: site
+          #NETLIFY_CMD: npm build
+          NETLIFY_DIR: react/build
+
