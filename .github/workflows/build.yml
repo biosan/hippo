@@ -25,10 +25,7 @@ jobs:
       - name: Install wasm-pack
         run: cargo install wasm-pack
 
-      - name: Install React app dependencies
-        run: make install-react
-
-      - name: Build Rust WASM module & React production build
+      - name: Build Rust WASM module, install NPM deps & generate React production build
         run: make build
 
       - name: Publish to Netlify
