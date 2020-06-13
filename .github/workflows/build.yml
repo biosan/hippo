@@ -37,11 +37,10 @@ jobs:
         run: make build
 
       - name: Publish to Netlify
-        uses: netlify/actions/build@master
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=react/build
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          #NETLIFY_BASE: site
-          #NETLIFY_CMD: npm build
-          NETLIFY_DIR: react/build
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
