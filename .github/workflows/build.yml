@@ -22,8 +22,16 @@ jobs:
           target: wasm32-unknown-unknown
           override: true
 
+      # This action tries to download a pre-build binary for wasm-pack
+      # It's insecure to run binaries from an untrusted third party
+      # but I like fast build and using a pre-built binary remove
+      # more than 5 minutes from the pipeline run time
       - name: Install wasm-pack
-        run: cargo install wasm-pack
+        uses: actions-rs/install@v0.1
+        with:
+          crate: wasm-pack
+          version: latest
+          use-tool-cache: true
 
       - name: Build Rust WASM module, install NPM deps & generate React production build
         run: make build
